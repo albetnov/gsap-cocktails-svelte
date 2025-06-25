@@ -6,5 +6,4 @@
 <main>
     <Navbar />
     <Hero />
-    <div class="h-dvh bg-black"></div>
 </main>

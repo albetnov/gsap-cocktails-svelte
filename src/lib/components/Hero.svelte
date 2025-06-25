@@ -1,7 +1,15 @@
 <script>
+    import { isMediaQueryMatch } from "$lib";
     import gsap from "gsap";
     import { SplitText } from "gsap/SplitText";
     import { onMount } from "svelte";
+
+    /**
+     * @type {HTMLVideoElement}
+     */
+    let videoRef;
+
+    const isMobile = isMediaQueryMatch("(max-width: 767px)");
 
     onMount(() => {
         const ctx = gsap.context(() => {
@@ -28,22 +36,49 @@
                 ease: "expo.out",
                 stagger: 0.06,
                 delay: 1,
-            })
+            });
 
             gsap.timeline({
                 scrollTrigger: {
                     trigger: "#hero",
-                    start: 'top top',
-                    end: 'bottom top',
+                    start: "top top",
+                    end: "bottom top",
                     scrub: true,
+                },
+            })
+                .to(
+                    ".right-leaf",
+                    {
+                        y: 200,
+                    },
+                    0,
+                )
+                .to(
+                    ".left-leaf",
+                    {
+                        y: -200,
+                    },
+                    0,
+                );
+
+            const startValue = isMobile ? 'top 50%': 'center 60%'
+            const endValue = isMobile ? '120% top': 'bottom top'
+
+            const tl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: 'video',
+                    start: startValue,
+                    end: endValue,
+                    scrub: true,
+                    pin: true,
                 }
             })
-            .to('.right-leaf', {
-                y: 200
-            }, 0)
-            .to('.left-leaf', {
-                y: -200
-            }, 0)
+
+            videoRef.onloadedmetadata = () => {
+                tl.to(videoRef, {
+                    currentTime: videoRef.duration,
+                })
+            }
         });
 
         return () => ctx.revert();
@@ -82,3 +117,13 @@
         </div>
     </div>
 </section>
+
+<div class="video absolute inset-0">
+    <video
+        bind:this={videoRef}
+        src="/videos/output.mp4"
+        muted
+        playsinline
+        preload="auto"
+    ></video>
+</div>

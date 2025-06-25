@@ -3,9 +3,8 @@
     import gsap from "gsap";
     import { ScrollTrigger } from "gsap/ScrollTrigger";
     import { SplitText } from "gsap/SplitText";
-    import {CSSPlugin} from "gsap/CSSPlugin"
 
-    gsap.registerPlugin(ScrollTrigger, SplitText, CSSPlugin);
+    gsap.registerPlugin(ScrollTrigger, SplitText);
 
     let { children } = $props();
 </script>
